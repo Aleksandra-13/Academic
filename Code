@@ -1,0 +1,35 @@
+import requests
+import pytest
+
+BASE_URL = "https://petstore.swagger.io"
+
+
+# Тест 1: Получить питомцев с конкретным статусом (например, sold)
+def test_get_findByStatus():
+    response = requests.get(f"{BASE_URL}/v2/pet/findByStatus?status=sold")
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, list), "Ответ не является списком"
+    assert len(data) > 0, "Нет питомцев со статусом 'sold'"
+
+# Тест 2: Получить список заказов с ключом 'available'
+def test_get_store():
+    response = requests.get(f"{BASE_URL}/v2/store/inventory")
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, dict), "Ответ не является словарём"
+    # Проверяем, что в ответе есть ключ "available"
+    assert "available" in data, "В ответе нет ключа 'available'"
+
+# Тест 3: Получить определенного питомца (например, id = 5)
+def test_get_pet():
+    response = requests.get(f"{BASE_URL}/v2/pet/5")
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, dict), "Ответ не является объектом (словарём)"
+    assert data.get("id") == 5, "ID питомца не совпадает с запрошенным"
+
+# Тест 4: Проверка ошибки 404 (несуществующий питомец)
+def test_invalid_pet():
+    response = requests.get(f"{BASE_URL}/v2/pet/999999")
+    assert response.status_code == 404, f"Ожидалась ошибка 404, получен {response.status_code}"
