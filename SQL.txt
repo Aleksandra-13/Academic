@@ -1,0 +1,20 @@
+select * from authors;
+select * from books;
+
+
+--1.	Запрос поиска всех книг автора Александр Пушкин
+select b.title from authors a join books b on a.author_id = b.author_id
+where a.name = 'Александр Пушкин';
+
+
+--2.	Запрос подсчета количества книг каждого автора.
+select a.name, count(b.title) as "Количество книг" from authors a join books b 
+on a.author_id = b.author_id group by a.name;
+
+
+ --3.	Поиск книг, название которых начинается с буквы «П».
+select title from books where title like 'П%';
+
+
+--4.	Отсортировать книги по году издания от новых к старым.
+select b.* from books b order by b.publish_year desc;
